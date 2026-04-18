@@ -3,63 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Myanmar Typing Pro with Keyboard</title>
+    <title>Myanmar Typing Master - Final</title>
     <style>
-        :root { --bg: #f8f9fa; --card: #ffffff; --text: #212529; --primary: #007bff; --key-bg: #e9ecef; }
-        [data-theme='dark'] { --bg: #1a1a1a; --card: #2d2d2d; --text: #f8f9fa; --primary: #375a7f; --key-bg: #444; }
-
-        body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: 0.3s; }
-        .card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; max-width: 800px; text-align: center; }
-        
-        #word-display { font-size: 24px; margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 10px; line-height: 1.6; text-align: left; }
-        .correct { color: #28a745; }
-        .incorrect { color: #dc3545; text-decoration: underline; }
-        
-        input { width: 100%; padding: 12px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; background: var(--card); color: var(--text); }
-
-        /* Keyboard Styles */
-        .keyboard { display: grid; grid-template-columns: repeat(30, 1fr); gap: 5px; margin-top: 20px; background: #333; padding: 15px; border-radius: 10px; }
-        .key { grid-column: span 2; background: var(--key-bg); border-radius: 5px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: 0.1s; border-bottom: 3px solid #bbb; }
-        .key.active { background: var(--primary); color: white; transform: translateY(2px); border-bottom: none; }
-        .key.space { grid-column: span 10; }
-        
-        .stats { display: flex; justify-content: space-around; margin-bottom: 10px; font-weight: bold; }
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background: var(--primary); color: white; }
+        :root { --bg: #f4f7f6; --card: #ffffff; --text: #2d3436; --primary: #0984e3; --accent: #fdcb6e; }
+        [data-theme='dark'] { --bg: #2d3436; --card: #636e72; --text: #dfe6e9; --primary: #74b9ff; }
+        body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; transition: 0.3s; }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 95%; max-width: 800px; text-align: center; }
+        .mode-selector { margin-bottom: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .mode-btn { padding: 8px 12px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 20px; cursor: pointer; font-size: 14px; }
+        .mode-btn.active { background: var(--primary); color: white; }
+        #word-display { font-size: 24px; margin: 15px 0; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 12px; line-height: 1.8; text-align: left; min-height: 60px; word-break: break-word; }
+        .correct { color: #00b894; }
+        .incorrect { color: #d63031; background: #ff767544; border-radius: 4px; }
+        input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #dfe6e9; border-radius: 10px; outline: none; background: var(--card); color: var(--text); }
+        .hands-area { display: flex; justify-content: space-around; width: 100%; max-width: 500px; margin: 15px auto; }
+        .hand-svg { width: 45%; height: auto; }
+        .finger { transition: fill 0.1s, transform 0.1s; fill: #ffe0b2; stroke: #ccae85; stroke-width: 1; }
+        .active-finger { fill: var(--accent) !important; transform: translateY(-5px); }
+        .stats { display: flex; justify-content: space-around; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
-
 <div class="card">
+    <div class="mode-selector">
+        <button class="mode-btn active" onclick="setMode('consonants', this)">က မှ အ</button>
+        <button class="mode-btn" onclick="setMode('geography', this)">မြန်မာနိုင်ငံအကြောင်း</button>
+    </div>
     <div class="stats">
         <div>WPM: <span id="wpm">0</span></div>
         <div>အချိန်: <span id="time">60</span>s</div>
-        <button class="btn" onclick="toggleTheme()">Theme</button>
+        <div>မှန်: <span id="accuracy">0</span>%</div>
     </div>
-
     <div id="word-display"></div>
-    <input type="text" id="word-input" placeholder="ဒီမှာ စတင်ရိုက်ပါ..." autofocus>
-
-    <div class="keyboard" id="keyboard">
-        <div class="key" data-key="q">ဆ</div><div class="key" data-key="w">တ</div><div class="key" data-key="e">န</div><div class="key" data-key="r">မ</div><div class="key" data-key="t">အ</div>
-        <div class="key" data-key="y">ပ</div><div class="key" data-key="u">က</div><div class="key" data-key="i">င</div><div class="key" data-key="o">သ</div><div class="key" data-key="p">စ</div>
-        <div class="key" data-key="a">ေ</div><div class="key" data-key="s">ှ</div><div class="key" data-key="d">ိ</div><div class="key" data-key="f">်</div><div class="key" data-key="g">ါ</div>
-        <div class="key" data-key="h">့</div><div class="key" data-key="j">ြ</div><div class="key" data-key="k">ု</div><div class="key" data-key="l">ူ</div><div class="key" data-key=";">း</div>
-        <div class="key" data-key="z">ဖ</div><div class="key" data-key="x">ထ</div><div class="key" data-key="c">ခ</div><div class="key" data-key="v">လ</div><div class="key" data-key="b">ဘ</div>
-        <div class="key" data-key="n">ည</div><div class="key" data-key="m">ာ</div><div class="key" data-key=",">ယ</div><div class="key" data-key=".">ဝ</div><div class="key" data-key="/">၏</div>
-        <div style="grid-column: span 10"></div>
-        <div class="key space" data-key=" ">Space</div>
+    <input type="text" id="word-input" placeholder="ဒီမှာ ရိုက်ပါ..." autocomplete="off" autofocus>
+    <div class="hands-area">
+        <svg class="hand-svg" viewBox="0 0 200 200">
+            <path id="left-pinky" class="finger" d="M30,100 Q30,40 50,40 L60,40 Q80,40 80,100 Z" />
+            <path id="left-ring" class="finger" d="M60,90 Q60,20 80,20 L90,20 Q110,20 110,90 Z" />
+            <path id="left-middle" class="finger" d="M95,80 Q95,10 115,10 L125,10 Q145,10 145,80 Z" />
+            <path id="left-index" class="finger" d="M130,90 Q130,30 150,30 L160,30 Q180,30 180,90 Z" />
+            <path id="left-thumb" class="finger" d="M160,140 Q190,140 190,170 L170,190 Q140,190 140,160 Z" />
+        </svg>
+        <svg class="hand-svg" viewBox="0 0 200 200">
+            <path id="right-thumb" class="finger" d="M40,140 Q10,140 10,170 L30,190 Q60,190 60,160 Z" />
+            <path id="right-index" class="finger" d="M20,90 Q20,30 40,30 L50,30 Q70,30 70,90 Z" />
+            <path id="right-middle" class="finger" d="M55,80 Q55,10 75,10 L85,10 Q105,10 105,80 Z" />
+            <path id="right-ring" class="finger" d="M90,90 Q90,20 110,20 L120,20 Q140,20 140,90 Z" />
+            <path id="right-pinky" class="finger" d="M120,100 Q120,40 140,40 L150,40 Q170,40 170,100 Z" />
+        </svg>
     </div>
-</div><script>
-    const sentences = ["မြန်မာနိုင်ငံသည် သာယာလှပသည်။", "အချိန်ကို တန်ဖိုးထားရမည်။", "မိဘကို ရိုသေစွာ လုပ်ကျွေးပါ။", "ကျန်းမာခြင်းသည် လာဘ်တစ်ပါးဖြစ်သည်။"];
-    let currentText = sentences[Math.floor(Math.random() * sentences.length)];
-    const wordDisplay = document.getElementById('word-display');
-    const wordInput = document.getElementById('word-input');
-    const wpmDisplay = document.getElementById('wpm');
-    const timeDisplay = document.getElementById('time');
-
-    let timeLeft = 60;
-    let timerStarted = false;
-
+    <button class="mode-btn" style="border-color:#ccc; color:#666;" onclick="location.reload()">Restart</button>
+</div>
+<script>
+    const data = {
+        consonants: ["က ခ ဂ ဃ င စ ဆ ဇ ဈ ည ဋ ဌ ဍ ဎ ဏ တ ထ ဒ ဓ န ပ ဖ ဗ ဘ မ ယ ရ လ ဝ သ ဟ ဠ အ"],
+        geography: ["ရန်ကုန်မြို့သည် မြန်မာနိုင်ငံ၏ စီးပွားရေးမြို့တော်ဖြစ်သည်။", "ဧရာဝတီမြစ်သည် မြန်မာနိုင်ငံ၏ အသက်သွေးကြောဖြစ်သည်။", "ပုဂံသည် မြန်မာ့ယဉ်ကျေးမှု အမွေအနှစ်များ တည်ရှိရာနေရာဖြစ်သည်။"]
+    };
+    const fingerMap = { 'က':'right-index','ခ':'left-middle','ဂ':'right-ring','င':'right-middle','စ':'right-pinky','ဆ':'left-pinky','တ':'left-ring','န':'left-middle','ပ':'right-index','မ':'left-index',' ' : 'right-thumb'};
+    let currentMode = 'consonants', currentText = data[currentMode][0], timeLeft = 60, timerStarted = false, timer;
+    const wordDisplay = document.getElementById('word-display'), wordInput = document.getElementById('word-input');
+    function setMode(mode, btn) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentText = data[mode][Math.floor(Math.random() * data[mode].length)];
+        resetGame();
+    }
     function init() {
         wordDisplay.innerHTML = '';
         currentText.split('').forEach(char => {
@@ -67,14 +76,41 @@
             span.innerText = char;
             wordDisplay.appendChild(span);
         });
+        highlightFinger(currentText[0]);
     }
-
-    // Keyboard Highlighting logic
-    window.addEventListener('keydown', (e) => {
-        const key = document.querySelector(.key[data-key="${e.key.toLowerCase()}"]);
-        if(key) key.classList.add('active');
+    wordInput.addEventListener('input', () => {
+        if(!timerStarted) { startTimer(); timerStarted = true; }
+        const spans = wordDisplay.querySelectorAll('span'), inputVal = wordInput.value.split('');
+        let correctCount = 0;
+        spans.forEach((span, i) => {
+            if (inputVal[i] == null) span.classList.remove('correct', 'incorrect');
+            else if (inputVal[i] === span.innerText) { span.classList.add('correct'); correctCount++; }
+            else span.classList.add('incorrect');
+        });
+        highlightFinger(currentText[wordInput.value.length]);
+        document.getElementById('accuracy').innerText = Math.round((correctCount / (wordInput.value.length || 1)) * 100);
+        if (wordInput.value === currentText) {
+            if(currentMode === 'geography') {
+                wordInput.value = ''; currentText = data.geography[Math.floor(Math.random() * data.geography.length)]; init();
+            } else alert("အောင်မြင်ပါတယ်!");
+        }
     });
-
-    window.addEventListener('keyup', (e) => {
-        const key = document.querySelector(.key[data-key="${e.key.toLowerCase()}"]);
-        if(key) key.classList.remove('acti
+    function highlightFinger(char) {
+        document.querySelectorAll('.finger').forEach(f => f.classList.remove('active-finger'));
+        const fingerId = fingerMap[char];
+        if(fingerId) document.getElementById(fingerId).classList.add('active-finger');
+    }
+    function startTimer() {
+        timer = setInterval(() => {
+            if(timeLeft > 0) {
+                timeLeft--; document.getElementById('time').innerText = timeLeft;
+                let wpm = Math.round((wordInput.value.length / 5) / ((60 - timeLeft) / 60));
+                document.getElementById('wpm').innerText = wpm || 0;
+            } else { clearInterval(timer); wordInput.disabled = true; }
+        }, 1000);
+    }
+    function resetGame() { clearInterval(timer); timeLeft = 60; timerStarted = false; wordInput.value = ''; init(); }
+    init();
+</script>
+</body>
+</html>
