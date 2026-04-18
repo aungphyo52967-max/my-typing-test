@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Myanmar Typing Pro with Keyboard</title>
+    <title>Myanmar Typing Pro with Visual Guide</title>
     <style>
-        :root { --bg: #f8f9fa; --card: #ffffff; --text: #212529; --primary: #007bff; --key-bg: #e9ecef; }
+        :root { --bg: #f8f9fa; --card: #ffffff; --text: #212529; --primary: #007bff; --key-bg: #e9ecef; --finger-correct: #28a745; --finger-incorrect: #dc3545; }
         [data-theme='dark'] { --bg: #1a1a1a; --card: #2d2d2d; --text: #f8f9fa; --primary: #375a7f; --key-bg: #444; }
 
         body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: 0.3s; }
@@ -22,6 +22,11 @@
         .key { grid-column: span 2; background: var(--key-bg); border-radius: 5px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: 0.1s; border-bottom: 3px solid #bbb; }
         .key.active { background: var(--primary); color: white; transform: translateY(2px); border-bottom: none; }
         .key.space { grid-column: span 10; }
+        
+        .finger-guide { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .finger { width: 40px; height: 10px; background: var(--key-bg); border-radius: 5px; }
+        .finger.correct { background: var(--finger-correct); }
+        .finger.incorrect { background: var(--finger-incorrect); }
         
         .stats { display: flex; justify-content: space-around; margin-bottom: 10px; font-weight: bold; }
         .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background: var(--primary); color: white; }
@@ -40,41 +45,14 @@
     <input type="text" id="word-input" placeholder="ဒီမှာ စတင်ရိုက်ပါ..." autofocus>
 
     <div class="keyboard" id="keyboard">
-        <div class="key" data-key="q">ဆ</div><div class="key" data-key="w">တ</div><div class="key" data-key="e">န</div><div class="key" data-key="r">မ</div><div class="key" data-key="t">အ</div>
-        <div class="key" data-key="y">ပ</div><div class="key" data-key="u">က</div><div class="key" data-key="i">င</div><div class="key" data-key="o">သ</div><div class="key" data-key="p">စ</div>
-        <div class="key" data-key="a">ေ</div><div class="key" data-key="s">ှ</div><div class="key" data-key="d">ိ</div><div class="key" data-key="f">်</div><div class="key" data-key="g">ါ</div>
-        <div class="key" data-key="h">့</div><div class="key" data-key="j">ြ</div><div class="key" data-key="k">ု</div><div class="key" data-key="l">ူ</div><div class="key" data-key=";">း</div>
-        <div class="key" data-key="z">ဖ</div><div class="key" data-key="x">ထ</div><div class="key" data-key="c">ခ</div><div class="key" data-key="v">လ</div><div class="key" data-key="b">ဘ</div>
-        <div class="key" data-key="n">ည</div><div class="key" data-key="m">ာ</div><div class="key" data-key=",">ယ</div><div class="key" data-key=".">ဝ</div><div class="key" data-key="/">၏</div>
+        <div class="key" data-key="q" data-finger="left-pinky">ဆ</div><div class="key" data-key="w" data-finger="left-ring">တ</div><div class="key" data-key="e" data-finger="left-middle">န</div><div class="key" data-key="r" data-finger="left-index">မ</div><div class="key" data-key="t" data-finger="left-index">အ</div>
+        <div class="key" data-key="y" data-finger="right-index">ပ</div><div class="key" data-key="u" data-finger="right-index">က</div><div class="key" data-key="i" data-finger="right-middle">င</div><div class="key" data-key="o" data-finger="right-ring">သ</div><div class="key" data-key="p" data-finger="right-pinky">စ</div>
+        <div class="key" data-key="a" data-finger="left-pinky">ေ</div><div class="key" data-key="s" data-finger="left-ring">ှ</div><div class="key" data-key="d" data-finger="left-middle">ိ</div><div class="key" data-key="f" data-finger="left-index">်</div><div class="key" data-key="g" data-finger="left-index">ါ</div>
+<div class="key" data-key="h" data-finger="right-index">့</div><div class="key" data-key="j" data-finger="right-index">ြ</div><div class="key" data-key="k" data-finger="right-middle">ု</div><div class="key" data-key="l" data-finger="right-ring">ူ</div><div class="key" data-key=";" data-finger="right-pinky">း</div>
+        <div class="key" data-key="z" data-finger="left-pinky">ဖ</div><div class="key" data-key="x" data-finger="left-ring">ထ</div><div class="key" data-key="c" data-finger="left-middle">ခ</div><div class="key" data-key="v" data-finger="left-index">လ</div><div class="key" data-key="b" data-finger="left-index">ဘ</div>
+        <div class="key" data-key="n" data-finger="right-index">ည</div><div class="key" data-key="m" data-finger="right-index">ာ</div><div class="key" data-key="," data-finger="right-middle">ယ</div><div class="key" data-key="." data-finger="right-ring">ဝ</div><div class="key" data-key="/" data-finger="right-pinky">၏</div>
         <div style="grid-column: span 10"></div>
-        <div class="key space" data-key=" ">Space</div>
+        <div class="key space" data-key=" " data-finger="thumb">Space</div>
     </div>
-</div><script>
-    const sentences = ["မြန်မာနိုင်ငံသည် သာယာလှပသည်။", "အချိန်ကို တန်ဖိုးထားရမည်။", "မိဘကို ရိုသေစွာ လုပ်ကျွေးပါ။", "ကျန်းမာခြင်းသည် လာဘ်တစ်ပါးဖြစ်သည်။"];
-    let currentText = sentences[Math.floor(Math.random() * sentences.length)];
-    const wordDisplay = document.getElementById('word-display');
-    const wordInput = document.getElementById('word-input');
-    const wpmDisplay = document.getElementById('wpm');
-    const timeDisplay = document.getElementById('time');
-
-    let timeLeft = 60;
-    let timerStarted = false;
-
-    function init() {
-        wordDisplay.innerHTML = '';
-        currentText.split('').forEach(char => {
-            const span = document.createElement('span');
-            span.innerText = char;
-            wordDisplay.appendChild(span);
-        });
-    }
-
-    // Keyboard Highlighting logic
-    window.addEventListener('keydown', (e) => {
-        const key = document.querySelector(.key[data-key="${e.key.toLowerCase()}"]);
-        if(key) key.classList.add('active');
-    });
-
-    window.addEventListener('keyup', (e) => {
-        const key = document.querySelector(.key[data-key="${e.key.toLowerCase()}"]);
-        if(key) key.classList.remove('acti
+    
+    <div class="finger-gu
