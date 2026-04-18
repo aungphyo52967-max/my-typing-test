@@ -1,144 +1,80 @@
-
 <!DOCTYPE html>
 <html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Myanmar Pro Typing Trainer</title>
+    <title>Myanmar Typing Pro with Keyboard</title>
     <style>
-        :root { --bg: #f0f2f5; --card: #ffffff; --text: #333; --primary: #1a73e8; }
-        [data-theme='dark'] { --bg: #18191a; --card: #242526; --text: #e4e6eb; --primary: #4dadff; }
+        :root { --bg: #f8f9fa; --card: #ffffff; --text: #212529; --primary: #007bff; --key-bg: #e9ecef; }
+        [data-theme='dark'] { --bg: #1a1a1a; --card: #2d2d2d; --text: #f8f9fa; --primary: #375a7f; --key-bg: #444; }
 
         body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: 0.3s; }
-        .card { background: var(--card); padding: 25px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); width: 90%; max-width: 600px; text-align: center; }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; max-width: 800px; text-align: center; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        #word-display { font-size: 22px; margin: 20px 0; padding: 20px; background: rgba(0,0,0,0.05); border-radius: 10px; line-height: 1.8; text-align: left; min-height: 80px; word-break: break-word; }
-        
+        #word-display { font-size: 24px; margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 10px; line-height: 1.6; text-align: left; }
         .correct { color: #28a745; }
-        .incorrect { color: #dc3545; background: #ffdada; border-radius: 3px; }
+        .incorrect { color: #dc3545; text-decoration: underline; }
         
-        input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 10px; outline: none; background: var(--card); color: var(--text); }
-        input:focus { border-color: var(--primary); }
+        input { width: 100%; padding: 12px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; background: var(--card); color: var(--text); }
+
+        /* Keyboard Styles */
+        .keyboard { display: grid; grid-template-columns: repeat(30, 1fr); gap: 5px; margin-top: 20px; background: #333; padding: 15px; border-radius: 10px; }
+        .key { grid-column: span 2; background: var(--key-bg); border-radius: 5px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: 0.1s; border-bottom: 3px solid #bbb; }
+        .key.active { background: var(--primary); color: white; transform: translateY(2px); border-bottom: none; }
+        .key.space { grid-column: span 10; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .stat-box { padding: 10px; background: var(--bg); border-radius: 8px; font-weight: bold; }
-        
-        .btn { margin-top: 20px; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: var(--primary); color: white; }
-        .theme-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .stats { display: flex; justify-content: space-around; margin-bottom: 10px; font-weight: bold; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <div class="header">
-        <h3 style="margin:0;">Typing Pro</h3>
-        <button class="theme-btn" onclick="toggleTheme()">Dark/Light</button>
+    <div class="stats">
+        <div>WPM: <span id="wpm">0</span></div>
+        <div>အချိန်: <span id="time">60</span>s</div>
+        <button class="btn" onclick="toggleTheme()">Theme</button>
     </div>
 
     <div id="word-display"></div>
-    
-    <input type="text" id="word-input" placeholder="ဒီမှာ စတင်ရိုက်နှိပ်ပါ..." autocomplete="off">
+    <input type="text" id="word-input" placeholder="ဒီမှာ စတင်ရိုက်ပါ..." autofocus>
 
-    <div class="stats-grid">
-        <div class="stat-box">အချိန်: <span id="time">60</span>s</div>
-        <div class="stat-box">WPM: <span id="wpm">0</span></div>
-        <div class="stat-box">မှန်ကန်မှု: <span id="accuracy">0</span>%</div>
+    <div class="keyboard" id="keyboard">
+        <div class="key" data-key="q">ဆ</div><div class="key" data-key="w">တ</div><div class="key" data-key="e">န</div><div class="key" data-key="r">မ</div><div class="key" data-key="t">အ</div>
+        <div class="key" data-key="y">ပ</div><div class="key" data-key="u">က</div><div class="key" data-key="i">င</div><div class="key" data-key="o">သ</div><div class="key" data-key="p">စ</div>
+        <div class="key" data-key="a">ေ</div><div class="key" data-key="s">ှ</div><div class="key" data-key="d">ိ</div><div class="key" data-key="f">်</div><div class="key" data-key="g">ါ</div>
+        <div class="key" data-key="h">့</div><div class="key" data-key="j">ြ</div><div class="key" data-key="k">ု</div><div class="key" data-key="l">ူ</div><div class="key" data-key=";">း</div>
+        <div class="key" data-key="z">ဖ</div><div class="key" data-key="x">ထ</div><div class="key" data-key="c">ခ</div><div class="key" data-key="v">လ</div><div class="key" data-key="b">ဘ</div>
+        <div class="key" data-key="n">ည</div><div class="key" data-key="m">ာ</div><div class="key" data-key=",">ယ</div><div class="key" data-key=".">ဝ</div><div class="key" data-key="/">၏</div>
+        <div style="grid-column: span 10"></div>
+        <div class="key space" data-key=" ">Space</div>
     </div>
-
-    <button class="btn" onclick="location.reload()">ပြန်စမည်</button>
-</div>
-
-<script>
-    const sentences = [
-        "မြန်မာနိုင်ငံသည် သယံဇာတ ပေါကြွယ်ဝသော နိုင်ငံဖြစ်သည်။",
-        "ပညာသည် ရွှေအိုးထက် မြတ်သည်။",
-        "ကျန်းမာခြင်းသည် လာဘ်တစ်ပါး ဖြစ်သည်။",
-        "အချိန်ကို အကျိုးရှိရှိ အသုံးချတတ်ရမည်။"
-    ];
-
-    let currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+</div><script>
+    const sentences = ["မြန်မာနိုင်ငံသည် သာယာလှပသည်။", "အချိန်ကို တန်ဖိုးထားရမည်။", "မိဘကို ရိုသေစွာ လုပ်ကျွေးပါ။", "ကျန်းမာခြင်းသည် လာဘ်တစ်ပါးဖြစ်သည်။"];
+    let currentText = sentences[Math.floor(Math.random() * sentences.length)];
     const wordDisplay = document.getElementById('word-display');
     const wordInput = document.getElementById('word-input');
-    const timeDisplay = document.getElementById('time');
     const wpmDisplay = document.getElementById('wpm');
-    const accuracyDisplay = document.getElementById('accuracy');
-    
+    const timeDisplay = document.getElementById('time');
+
     let timeLeft = 60;
     let timerStarted = false;
-    let timer;
-    let totalCharsTyped = 0;
 
     function init() {
         wordDisplay.innerHTML = '';
-        currentSentence.split('').forEach(char => {
+        currentText.split('').forEach(char => {
             const span = document.createElement('span');
             span.innerText = char;
             wordDisplay.appendChild(span);
         });
     }
 
-    wordInput.addEventListener('input', () => {
-        if(!timerStarted) {
-            startTimer();
-            timerStarted = true;
-        }
-
-        const arrayQuote = wordDisplay.querySelectorAll('span');
-        const arrayValue = wordInput.value.split('');
-        let correctChars = 0;
-
-        arrayQuote.forEach((span, index) => {
-            const char = arrayValue[index];
-            if (char == null) {
-                span.classList.remove('correct', 'incorrect');
-            } else if (char === span.innerText) {
-                span.classList.add('correct');
-                span.classList.remove('incorrect');
-                correctChars++;
-            } else {
-                span.classList.add('incorrect');
-                span.classList.remove('correct');
-            }
-        });
-
-        // Stats updates
-        totalCharsTyped = arrayValue.length;
-        let acc = totalCharsTyped > 0 ? (correctChars / totalCharsTyped) * 100 : 0;
-        accuracyDisplay.innerText = Math.round(acc);
-
-        // Calculate WPM (Average 5 chars = 1 word)
-        let timePassed = (60 - timeLeft) / 60;
-        let wpm = Math.round((correctChars / 5) / (timePassed || 1));
-        wpmDisplay.innerText = wpm;
-
-        if (wordInput.value === currentSentence) {
-            wordInput.value = '';
-            currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
-            init();
-        }
+    // Keyboard Highlighting logic
+    window.addEventListener('keydown', (e) => {
+        const key = document.querySelector(.key[data-key="${e.key.toLowerCase()}"]);
+        if(key) key.classList.add('active');
     });
 
-    function startTimer() {
-        timer = setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                timeDisplay.innerText = timeLeft;
-            } else {
-                clearInterval(timer);
-                wordInput.disabled = true;
-                alert("အချိန်ပြည့်သွားပါပြီ! သင်၏ WPM မှာ " + wpmDisplay.innerText + " ဖြစ်သည်။");
-            }
-        }, 1000);
-    }
-
-    function toggleTheme() {
-        const current = document.body.getAttribute('data-theme');
-        document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-    }
-
-    init();
-</script>
-
-</body>
-</html>
+    window.addEventListener('keyup', (e) => {
+        const key = document.querySelector(.key[data-key="${e.key.toLowerCase()}"]);
+        if(key) key.classList.remove('acti
